@@ -56,9 +56,9 @@
 - [x] 3.11 `get_writer` dispatch function
 
 ### Phase 4: Manifest
-- [ ] 4.1 `write_manifest` creates `MANIFEST.json`
-- [ ] 4.2 `read_manifest` returns `Manifest` or `None`
-- [ ] 4.3 `manifest_exists` returns bool
+- [x] 4.1 `write_manifest` creates `MANIFEST.json`
+- [x] 4.2 `read_manifest` returns `Manifest` or `None`
+- [x] 4.3 `manifest_exists` returns bool
 
 ### Phase 5: Plan Post-Processing
 - [ ] 5.1 `deduplicate_paths` — macOS-style `(N)` suffixes

@@ -1,0 +1,50 @@
+from pathlib import Path
+
+from src.manifest import manifest_exists, read_manifest, write_manifest
+from src.models import FileEntry, Manifest, OperationParameters
+
+
+def _make_manifest() -> Manifest:
+    return Manifest(
+        operation="op_alpha",
+        parameters=OperationParameters(
+            base_dir="/tmp",
+            num_files=2,
+            formats=["pdf", "conf"],
+            teams=["it"],
+            company="Acme",
+            file_content="docs",
+            model="claude-sonnet-4-20250514",
+            passwords=["abc123"],
+        ),
+        files=[
+            FileEntry(path="it/report.pdf", format="pdf", summary="A report"),
+            FileEntry(path="it/app.conf", format="conf", summary="Config"),
+        ],
+    )
+
+
+def test_write_manifest_creates_file(tmp_path: Path):
+    manifest = _make_manifest()
+    write_manifest(manifest, tmp_path)
+    assert (tmp_path / "MANIFEST.json").exists()
+
+
+def test_write_manifest_round_trips(tmp_path: Path):
+    original = _make_manifest()
+    write_manifest(original, tmp_path)
+    restored = read_manifest(tmp_path)
+    assert restored == original
+
+
+def test_read_manifest_returns_none_when_missing(tmp_path: Path):
+    assert read_manifest(tmp_path) is None
+
+
+def test_manifest_exists_true_when_present(tmp_path: Path):
+    write_manifest(_make_manifest(), tmp_path)
+    assert manifest_exists(tmp_path) is True
+
+
+def test_manifest_exists_false_when_missing(tmp_path: Path):
+    assert manifest_exists(tmp_path) is False
