@@ -1,7 +1,6 @@
 from pathlib import Path
 
 from pptx import Presentation
-from pptx.util import Inches
 
 
 def write_pptx(content: str, path: Path) -> None:
@@ -14,7 +13,9 @@ def write_pptx(content: str, path: Path) -> None:
             continue
         slide_layout = prs.slide_layouts[1]
         slide = prs.slides.add_slide(slide_layout)
-        slide.shapes.title.text = lines[0]
+        title_shape = slide.shapes.title
+        if title_shape is not None:
+            title_shape.text = lines[0]
         body = slide.placeholders[1]
         tf = body.text_frame
         tf.clear()

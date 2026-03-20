@@ -2,6 +2,7 @@ import itertools
 from pathlib import PurePosixPath
 
 import anthropic
+from anthropic.types import Message, ToolUseBlock, ToolParam
 from pydantic import ValidationError
 
 from src.models import BATCH_SIZE, CampaignPlan, FileEntry, OperationParameters
@@ -64,7 +65,7 @@ def post_process_plan(plans: list[CampaignPlan], passwords: list[str]) -> Campai
 def compute_batches(num_files: int, batch_size: int = BATCH_SIZE) -> list[tuple[int, int]]:
     full_batches = num_files // batch_size
     remainder = num_files % batch_size
-    batches = [(i + 1, batch_size) for i in range(full_batches)]
+    batches: list[tuple[int, int]] = [(i + 1, batch_size) for i in range(full_batches)]
     if remainder > 0:
         batches.append((full_batches + 1, remainder))
     return batches
@@ -87,11 +88,10 @@ def build_planning_prompt(
     )
 
 
-def _extract_campaign_plan(response: object) -> CampaignPlan:
-    content = getattr(response, "content", [])
-    for block in content:
-        if getattr(block, "type", None) == "tool_use":
-            tool_input = block.input
+def _extract_campaign_plan(response: Message) -> CampaignPlan:
+    for block in response.content:
+        if isinstance(block, ToolUseBlock):
+            tool_input: object = block.input
             try:
                 return CampaignPlan.model_validate(tool_input)
             except ValidationError as e:
@@ -106,15 +106,16 @@ def plan_batch(
     model: str,
 ) -> CampaignPlan:
     tool_schema = CampaignPlan.model_json_schema()
+    tool: ToolParam = {
+        "name": "campaign_plan",
+        "description": "A structured campaign plan with file entries",
+        "input_schema": tool_schema,
+    }
     try:
         response = client.messages.create(
             model=model,
             max_tokens=8192,
-            tools=[{
-                "name": "campaign_plan",
-                "description": "A structured campaign plan with file entries",
-                "input_schema": tool_schema,
-            }],
+            tools=[tool],
             tool_choice={"type": "tool", "name": "campaign_plan"},
             messages=[{"role": "user", "content": prompt}],
         )

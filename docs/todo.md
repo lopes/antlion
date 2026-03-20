@@ -75,12 +75,12 @@
 - [x] 6.6 Invalid LLM response → `PlanningError`
 
 ### Phase 7: Content Generator
-- [ ] 7.1 `generate_file_content` — single file content (mocked API)
-- [ ] 7.2 `write_generated_file` — dispatch to correct writer
-- [ ] 7.3 `generate_all` — sequential loop
-- [ ] 7.4 Error resilience — skip failed, continue
-- [ ] 7.5 Resume — skip existing files
-- [ ] 7.6 Progress output
+- [x] 7.1 `generate_file_content` — single file content (mocked API)
+- [x] 7.2 `write_generated_file` — dispatch to correct writer
+- [x] 7.3 `generate_all` — sequential loop
+- [x] 7.4 Error resilience — skip failed, continue
+- [x] 7.5 Resume — skip existing files
+- [x] 7.6 Progress output
 
 ### Phase 8: Resume & Dry-Run
 - [ ] 8.1 `determine_resume_action` pure function
