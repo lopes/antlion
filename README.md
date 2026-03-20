@@ -5,7 +5,7 @@
 
 Antlion is an AI-powered adversary engagement tool designed to automatically generate high-fidelity, context-aware decoy files.
 
-Strongly inspired by Cliff Stoll's 1986 story, *The Cuckoo's Egg*, Antlion automates the creation of convincing fake data to buy defenders time, track adversaries, and map their behavior.
+Strongly inspired by Cliff Stoll's 1986 story, *[The Cuckoo's Egg](https://lopes.id/log/review-cuckoos-egg/)*, Antlion automates the creation of convincing fake data to buy defenders time, track adversaries, and map their behavior.
 
 By strategically placing these files in your environment, you align with the **MITRE Engage** framework to *Expose* adversary presence, *Affect* their movement, and *Elicit* actionable intelligence. Once an adversary interacts with these files, defenders can trigger alerts, deploy embedded honeytokens, mislead the attacker with fake intelligence, or simply delay their lateral movement.
 
