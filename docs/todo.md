@@ -2,25 +2,25 @@
 
 ## Progress Tracker
 
-- [ ] **Phase 0:** Project scaffolding (pyproject.toml, dirs, uv sync)
-- [ ] **Phase 1:** Pydantic models in `src/models.py`
-- [ ] **Phase 2:** CLI parsing in `src/cli.py`
-- [ ] **Phase 3:** File writers (`src/write_*.py`)
-- [ ] **Phase 4:** Manifest read/write in `src/manifest.py`
-- [ ] **Phase 5:** Plan post-processing (dedup, passwords, merge)
-- [ ] **Phase 6:** Campaign planner in `src/planner.py`
-- [ ] **Phase 7:** Content generator in `src/generator.py`
-- [ ] **Phase 8:** Resume & dry-run logic
-- [ ] **Phase 9:** Entrypoint orchestration in `src/antlion.py`
-- [ ] **Phase 10:** Integration smoke tests
+- [x] **Phase 0:** Project scaffolding (pyproject.toml, dirs, uv sync)
+- [x] **Phase 1:** Pydantic models in `src/models.py`
+- [x] **Phase 2:** CLI parsing in `src/cli.py`
+- [x] **Phase 3:** File writers (`src/write_*.py`)
+- [x] **Phase 4:** Manifest read/write in `src/manifest.py`
+- [x] **Phase 5:** Plan post-processing (dedup, passwords, merge)
+- [x] **Phase 6:** Campaign planner in `src/planner.py`
+- [x] **Phase 7:** Content generator in `src/generator.py`
+- [x] **Phase 8:** Resume & dry-run logic
+- [x] **Phase 9:** Entrypoint orchestration in `src/antlion.py`
+- [x] **Phase 10:** Integration smoke tests
 
 ## Detailed Increments
 
 ### Phase 0: Project Scaffolding
-- [ ] 0.1 Update `pyproject.toml` with all deps
-- [ ] 0.2 Run `uv sync`
-- [ ] 0.3 Create `src/`, `tests/` directories
-- [ ] 0.4 Move `main.py` → `src/antlion.py`, confirm `uv run pytest` runs
+- [x] 0.1 Update `pyproject.toml` with all deps
+- [x] 0.2 Run `uv sync`
+- [x] 0.3 Create `src/`, `tests/` directories
+- [x] 0.4 Move `main.py` → `src/antlion.py`, confirm `uv run pytest` runs
 
 ### Phase 1: Pydantic Models
 - [x] 1.1 `SUPPORTED_FORMATS` frozenset
