@@ -33,15 +33,15 @@
 - [x] 1.8 `Manifest` frozen model with JSON round-trip
 
 ### Phase 2: CLI Parsing
-- [ ] 2.1 Happy path — all required args, defaults applied
-- [ ] 2.2 Missing required arg → `CliError`
-- [ ] 2.3 `--operation` regex validation
-- [ ] 2.4 `--num-files` range 1–`MAX_FILES`
-- [ ] 2.5 `--formats` against `SUPPORTED_FORMATS`
-- [ ] 2.6 `--teams` max 64 chars per team
-- [ ] 2.7 `--company` max 256, `--file-content` max 1024
-- [ ] 2.8 Optional params: `--model`, `--passwords`, `--resume`, `--dry-run`
-- [ ] 2.9 `--base-dir` existing writable directory
+- [x] 2.1 Happy path — all required args, defaults applied
+- [x] 2.2 Missing required arg → `CliError`
+- [x] 2.3 `--operation` regex validation
+- [x] 2.4 `--num-files` range 1–`MAX_FILES`
+- [x] 2.5 `--formats` against `SUPPORTED_FORMATS`
+- [x] 2.6 `--teams` max 64 chars per team
+- [x] 2.7 `--company` max 256, `--file-content` max 1024
+- [x] 2.8 Optional params: `--model`, `--passwords`, `--resume`, `--dry-run`
+- [x] 2.9 `--base-dir` existing writable directory
 
 ### Phase 3: File Writers
 - [ ] 3.1–3.2 `write_md` + nested dir creation

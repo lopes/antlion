@@ -1,0 +1,93 @@
+import argparse
+import os
+import re
+from dataclasses import dataclass
+
+from src.models import DEFAULT_MODEL, DEFAULT_PASSWORDS, MAX_FILES, SUPPORTED_FORMATS
+
+OPERATION_PATTERN: re.Pattern[str] = re.compile(r"^[a-zA-Z0-9][a-zA-Z0-9._-]{0,254}$")
+
+
+@dataclass(frozen=True)
+class CliArgs:
+    base_dir: str
+    operation: str
+    num_files: int
+    formats: list[str]
+    teams: list[str]
+    company: str
+    file_content: str
+    model: str
+    passwords: list[str]
+    resume: bool
+    dry_run: bool
+
+
+@dataclass(frozen=True)
+class CliError:
+    message: str
+
+
+def parse_args(argv: list[str]) -> CliArgs | CliError:
+    parser = argparse.ArgumentParser(prog="antlion", exit_on_error=False)
+    parser.add_argument("--base-dir", required=True)
+    parser.add_argument("--operation", required=True)
+    parser.add_argument("--num-files", required=True, type=int)
+    parser.add_argument("--formats", required=True)
+    parser.add_argument("--teams", required=True)
+    parser.add_argument("--company", required=True)
+    parser.add_argument("--file-content", required=True)
+    parser.add_argument("--model", default=DEFAULT_MODEL)
+    parser.add_argument("--passwords", default=None)
+    parser.add_argument("--resume", action="store_true", default=False)
+    parser.add_argument("--dry-run", action="store_true", default=False)
+
+    try:
+        args = parser.parse_args(argv)
+    except argparse.ArgumentError as e:
+        return CliError(message=str(e))
+
+    if not os.path.isdir(args.base_dir):
+        return CliError(message=f"base-dir is not an existing directory: '{args.base_dir}'")
+
+    if not OPERATION_PATTERN.match(args.operation):
+        return CliError(message=f"Invalid operation name: '{args.operation}'")
+
+    if not 1 <= args.num_files <= MAX_FILES:
+        return CliError(message=f"num-files must be between 1 and {MAX_FILES}")
+
+    formats = args.formats.split(",")
+    invalid_formats = [f for f in formats if f not in SUPPORTED_FORMATS]
+    if invalid_formats or formats == [""]:
+        return CliError(message=f"Unsupported formats: {', '.join(invalid_formats or ['(empty)'])}")
+
+    teams = args.teams.split(",")
+    long_teams = [t for t in teams if len(t) > 64]
+    if long_teams:
+        return CliError(message=f"Team names exceed 64 chars: {', '.join(long_teams)}")
+
+    if not args.company:
+        return CliError(message="company must not be empty")
+    if len(args.company) > 256:
+        return CliError(message="company must be at most 256 characters")
+
+    if not args.file_content:
+        return CliError(message="file-content must not be empty")
+    if len(args.file_content) > 1024:
+        return CliError(message="file-content must be at most 1024 characters")
+
+    passwords = args.passwords.split(",") if args.passwords else list(DEFAULT_PASSWORDS)
+
+    return CliArgs(
+        base_dir=args.base_dir,
+        operation=args.operation,
+        num_files=args.num_files,
+        formats=formats,
+        teams=teams,
+        company=args.company,
+        file_content=args.file_content,
+        model=args.model,
+        passwords=passwords,
+        resume=args.resume,
+        dry_run=args.dry_run,
+    )
