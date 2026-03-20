@@ -1,7 +1,8 @@
-from unittest.mock import MagicMock, patch
+from unittest.mock import MagicMock
 
 import anthropic
 import pytest
+from anthropic.types import ToolUseBlock
 
 from src.models import CampaignPlan, FileEntry, OperationParameters
 from src.planner import (
@@ -47,11 +48,13 @@ def test_build_planning_prompt_contains_context():
     assert "50" in prompt
 
 
-def _make_tool_use_block(files: list[dict[str, str]]) -> MagicMock:
-    block = MagicMock()
-    block.type = "tool_use"
-    block.input = {"files": files}
-    return block
+def _make_tool_use_block(files: list[dict[str, str]]) -> ToolUseBlock:
+    return ToolUseBlock(
+        id="toolu_test",
+        type="tool_use",
+        name="campaign_plan",
+        input={"files": files},
+    )
 
 
 def _make_api_response(files: list[dict[str, str]]) -> MagicMock:

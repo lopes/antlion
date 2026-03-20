@@ -83,9 +83,9 @@
 - [x] 7.6 Progress output
 
 ### Phase 8: Resume & Dry-Run
-- [ ] 8.1 `determine_resume_action` pure function
-- [ ] 8.2 Dry-run new operation — plan printed, no files
-- [ ] 8.3 Dry-run + resume — show remaining only
+- [x] 8.1 `determine_resume_action` pure function
+- [x] 8.2 Dry-run new operation — plan printed, no files
+- [x] 8.3 Dry-run + resume — show remaining only
 
 ### Phase 9: Entrypoint
 - [ ] 9.1 Bad CLI args → exit 1
