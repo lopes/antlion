@@ -61,18 +61,18 @@
 - [x] 4.3 `manifest_exists` returns bool
 
 ### Phase 5: Plan Post-Processing
-- [ ] 5.1 `deduplicate_paths` — macOS-style `(N)` suffixes
-- [ ] 5.2 `assign_epdf_passwords` — cycled from password list
-- [ ] 5.3 `merge_plans` — concatenate file lists
-- [ ] 5.4 `post_process_plan` — compose merge → dedup → passwords
+- [x] 5.1 `deduplicate_paths` — macOS-style `(N)` suffixes
+- [x] 5.2 `assign_epdf_passwords` — cycled from password list
+- [x] 5.3 `merge_plans` — concatenate file lists
+- [x] 5.4 `post_process_plan` — compose merge → dedup → passwords
 
 ### Phase 6: Campaign Planner
-- [ ] 6.1 `compute_batches` — batch count calculation
-- [ ] 6.2 `build_planning_prompt` — formatted prompt string
-- [ ] 6.3 `plan_batch` — single batch (mocked API)
-- [ ] 6.4 `plan_campaign` — full orchestration (mocked, 2 batches)
-- [ ] 6.5 API error handling → `PlanningError`
-- [ ] 6.6 Invalid LLM response → `PlanningError`
+- [x] 6.1 `compute_batches` — batch count calculation
+- [x] 6.2 `build_planning_prompt` — formatted prompt string
+- [x] 6.3 `plan_batch` — single batch (mocked API)
+- [x] 6.4 `plan_campaign` — full orchestration (mocked, 2 batches)
+- [x] 6.5 API error handling → `PlanningError`
+- [x] 6.6 Invalid LLM response → `PlanningError`
 
 ### Phase 7: Content Generator
 - [ ] 7.1 `generate_file_content` — single file content (mocked API)
