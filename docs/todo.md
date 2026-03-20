@@ -88,12 +88,12 @@
 - [x] 8.3 Dry-run + resume — show remaining only
 
 ### Phase 9: Entrypoint
-- [ ] 9.1 Bad CLI args → exit 1
-- [ ] 9.2 Missing API key → exit 2
-- [ ] 9.3 Full run (mocked) → exit 0, files created
-- [ ] 9.4 Partial completion → exit 4
-- [ ] 9.5 Planning error → exit 5
-- [ ] 9.6 API error → exit 3
+- [x] 9.1 Bad CLI args → exit 1
+- [x] 9.2 Missing API key → exit 2
+- [x] 9.3 Full run (mocked) → exit 0, files created
+- [x] 9.4 Partial completion → exit 4
+- [x] 9.5 Planning error → exit 5
+- [x] 9.6 API error → exit 3
 
 ### Phase 10: Integration
 - [ ] 10.1 End-to-end with mocked LLM (5 files, 3 formats)
