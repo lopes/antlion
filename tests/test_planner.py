@@ -4,8 +4,8 @@ import anthropic
 import pytest
 from anthropic.types import ToolUseBlock
 
-from src.models import CampaignPlan, FileEntry, OperationParameters
-from src.planner import (
+from antlion.models import CampaignPlan, FileEntry, OperationParameters
+from antlion.planner import (
     PlanningError,
     build_planning_prompt,
     compute_batches,

@@ -1,8 +1,8 @@
 from pathlib import Path
 from unittest.mock import MagicMock
 
-from src.generator import generate_all, generate_file_content, write_generated_file
-from src.models import FileEntry, Manifest, OperationParameters
+from antlion.generator import generate_all, generate_file_content, write_generated_file
+from antlion.models import FileEntry, Manifest, OperationParameters
 
 
 def _make_text_block() -> MagicMock:

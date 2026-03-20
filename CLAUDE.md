@@ -17,7 +17,7 @@ Antlion is an AI-powered adversary engagement tool that generates high-fidelity,
 uv sync
 
 # Run the tool
-uv run python src/antlion.py \
+uv run python -m antlion \
   --base-dir /tmp \
   --operation op_alpha \
   --num-files 10 \

@@ -3,12 +3,16 @@ import shutil
 import sys
 from pathlib import Path
 
+import truststore
+
+truststore.inject_into_ssl()
+
 import anthropic
 
-from src.cli import CliArgs, CliError, parse_args
-from src.generator import generate_all
-from src.manifest import manifest_exists, read_manifest, write_manifest
-from src.models import (
+from antlion.cli import CliArgs, CliError, parse_args
+from antlion.generator import generate_all
+from antlion.manifest import manifest_exists, read_manifest, write_manifest
+from antlion.models import (
     EXIT_API_ERROR,
     EXIT_CLI_ERROR,
     EXIT_ENV_ERROR,
@@ -18,8 +22,8 @@ from src.models import (
     Manifest,
     OperationParameters,
 )
-from src.planner import PlanningError, plan_campaign
-from src.resume import ResumeAction, determine_resume_action
+from antlion.planner import PlanningError, plan_campaign
+from antlion.resume import ResumeAction, determine_resume_action
 
 
 def _build_operation_parameters(cli: CliArgs) -> OperationParameters:
@@ -35,9 +39,10 @@ def _build_operation_parameters(cli: CliArgs) -> OperationParameters:
     )
 
 
-def _print_plan(manifest: Manifest) -> None:
-    print(f"Operation: {manifest.operation}")
-    print(f"Files: {len(manifest.files)}")
+def _print_dry_run(manifest: Manifest, operation_dir: Path) -> None:
+    print(f"[DRY RUN] Operation: {manifest.operation}")
+    print(f"[DRY RUN] Would create directory: {operation_dir}")
+    print(f"[DRY RUN] Files ({len(manifest.files)}):")
     for entry in manifest.files:
         print(f"  {entry.path} ({entry.format}) — {entry.summary}")
 
@@ -95,12 +100,14 @@ def run(argv: list[str]) -> int:
             parameters=params,
             files=plan.files,
         )
-        operation_dir.mkdir(parents=True, exist_ok=True)
-        write_manifest(manifest, operation_dir)
 
     if cli.dry_run:
-        _print_plan(manifest)
+        _print_dry_run(manifest, operation_dir)
         return EXIT_SUCCESS
+
+    if not is_resume:
+        operation_dir.mkdir(parents=True, exist_ok=True)
+        write_manifest(manifest, operation_dir)
 
     try:
         failures = generate_all(client, manifest, operation_dir, resume=is_resume)

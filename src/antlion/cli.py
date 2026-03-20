@@ -3,7 +3,7 @@ import os
 import re
 from dataclasses import dataclass
 
-from src.models import DEFAULT_MODEL, DEFAULT_PASSWORDS, MAX_FILES, SUPPORTED_FORMATS
+from antlion.models import DEFAULT_MODEL, DEFAULT_PASSWORDS, MAX_FILES, SUPPORTED_FORMATS
 
 OPERATION_PATTERN: re.Pattern[str] = re.compile(r"^[a-zA-Z0-9][a-zA-Z0-9._-]{0,254}$")
 

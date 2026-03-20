@@ -5,7 +5,7 @@ import anthropic
 from anthropic.types import Message, ToolUseBlock, ToolParam
 from pydantic import ValidationError
 
-from src.models import BATCH_SIZE, CampaignPlan, FileEntry, OperationParameters
+from antlion.models import BATCH_SIZE, CampaignPlan, FileEntry, OperationParameters
 
 
 class PlanningError(Exception):
@@ -55,9 +55,22 @@ def merge_plans(plans: list[CampaignPlan]) -> CampaignPlan:
     return CampaignPlan(files=all_files)
 
 
+def normalize_epdf_extensions(entries: list[FileEntry]) -> list[FileEntry]:
+    result: list[FileEntry] = []
+    for entry in entries:
+        if entry.format == "epdf" and entry.path.endswith(".epdf"):
+            p = PurePosixPath(entry.path)
+            new_path = str(p.with_suffix(".pdf"))
+            result.append(FileEntry(path=new_path, format=entry.format, summary=entry.summary))
+        else:
+            result.append(entry)
+    return result
+
+
 def post_process_plan(plans: list[CampaignPlan], passwords: list[str]) -> CampaignPlan:
     merged = merge_plans(plans)
-    deduped = deduplicate_paths(merged.files)
+    normalized = normalize_epdf_extensions(merged.files)
+    deduped = deduplicate_paths(normalized)
     with_passwords = assign_epdf_passwords(deduped, passwords)
     return CampaignPlan(files=with_passwords)
 

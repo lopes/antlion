@@ -1,8 +1,9 @@
-from src.models import CampaignPlan, FileEntry
-from src.planner import (
+from antlion.models import CampaignPlan, FileEntry
+from antlion.planner import (
     assign_epdf_passwords,
     deduplicate_paths,
     merge_plans,
+    normalize_epdf_extensions,
     post_process_plan,
 )
 
@@ -65,3 +66,29 @@ def test_post_process_plan_composes_all():
     assert paths == ["Report.md", "a.pdf", "Report (2).md"]
     epdf_entry = result.files[1]
     assert "Password: pw1" in epdf_entry.summary
+
+
+def test_normalize_epdf_extensions_renames_to_pdf():
+    entries = [
+        _entry("infra/secret.epdf", "epdf", "Secret doc"),
+        _entry("it/readme.md", "md", "Readme"),
+        _entry("it/report.pdf", "pdf", "Report"),
+    ]
+    result = normalize_epdf_extensions(entries)
+    assert result[0].path == "infra/secret.pdf"
+    assert result[0].format == "epdf"
+    assert result[1].path == "it/readme.md"
+    assert result[2].path == "it/report.pdf"
+
+
+def test_normalize_epdf_already_pdf_extension():
+    entries = [_entry("doc.pdf", "epdf", "Already pdf ext")]
+    result = normalize_epdf_extensions(entries)
+    assert result[0].path == "doc.pdf"
+
+
+def test_post_process_plan_normalizes_epdf_extensions():
+    plan = CampaignPlan(files=[_entry("secret.epdf", "epdf", "Secret")])
+    result = post_process_plan([plan], ["pw1"])
+    assert result.files[0].path == "secret.pdf"
+    assert result.files[0].format == "epdf"

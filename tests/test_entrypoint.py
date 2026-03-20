@@ -5,8 +5,8 @@ import anthropic
 import pytest
 from anthropic.types import TextBlock, ToolUseBlock
 
-from src.antlion import run
-from src.models import (
+from antlion import run
+from antlion.models import (
     EXIT_API_ERROR,
     EXIT_CLI_ERROR,
     EXIT_ENV_ERROR,
@@ -82,7 +82,7 @@ def test_successful_run_returns_exit_0(tmp_path: Path, monkeypatch: pytest.Monke
         _make_content_response("[main]\nkey=value"),
     ]
 
-    with patch("src.antlion.anthropic.Anthropic", return_value=mock_client):
+    with patch("antlion.__main__.anthropic.Anthropic", return_value=mock_client):
         result = run(_valid_argv(tmp_path))
 
     assert result == EXIT_SUCCESS
@@ -107,7 +107,7 @@ def test_partial_completion_returns_exit_4(tmp_path: Path, monkeypatch: pytest.M
         Exception("Generation failed"),
     ]
 
-    with patch("src.antlion.anthropic.Anthropic", return_value=mock_client):
+    with patch("antlion.__main__.anthropic.Anthropic", return_value=mock_client):
         result = run(_valid_argv(tmp_path))
 
     assert result == EXIT_PARTIAL
@@ -122,7 +122,7 @@ def test_planning_error_returns_exit_5(tmp_path: Path, monkeypatch: pytest.Monke
     response.stop_reason = "end_turn"
     mock_client.messages.create.return_value = response
 
-    with patch("src.antlion.anthropic.Anthropic", return_value=mock_client):
+    with patch("antlion.__main__.anthropic.Anthropic", return_value=mock_client):
         result = run(_valid_argv(tmp_path))
 
     assert result == EXIT_PLANNING_ERROR
@@ -138,7 +138,7 @@ def test_api_error_during_planning_returns_exit_3(tmp_path: Path, monkeypatch: p
         body=None,
     )
 
-    with patch("src.antlion.anthropic.Anthropic", return_value=mock_client):
+    with patch("antlion.__main__.anthropic.Anthropic", return_value=mock_client):
         result = run(_valid_argv(tmp_path))
 
     assert result == EXIT_API_ERROR

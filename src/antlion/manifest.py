@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from src.models import Manifest
+from antlion.models import Manifest
 
 MANIFEST_FILENAME = "MANIFEST.json"
 

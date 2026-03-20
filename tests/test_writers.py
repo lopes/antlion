@@ -1,16 +1,16 @@
 import json
 from pathlib import Path
 
-from src.write_md import write_md
-from src.write_json import write_json
-from src.write_xml import write_xml
-from src.write_conf import write_conf
-from src.write_pdf import write_pdf
-from src.write_epdf import write_epdf
-from src.write_docx import write_docx
-from src.write_xlsx import write_xlsx
-from src.write_pptx import write_pptx
-from src.writers import get_writer
+from antlion.writers import get_writer
+from antlion.writers.md import write_md
+from antlion.writers.json import write_json
+from antlion.writers.xml import write_xml
+from antlion.writers.conf import write_conf
+from antlion.writers.pdf import write_pdf
+from antlion.writers.epdf import write_epdf
+from antlion.writers.docx import write_docx
+from antlion.writers.xlsx import write_xlsx
+from antlion.writers.pptx import write_pptx
 
 
 def test_write_md_creates_file_with_correct_content(tmp_path: Path):

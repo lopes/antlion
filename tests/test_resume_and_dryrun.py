@@ -1,4 +1,4 @@
-from src.resume import ResumeAction, determine_resume_action
+from antlion.resume import ResumeAction, determine_resume_action
 
 
 def test_manifest_exists_with_resume_flag():

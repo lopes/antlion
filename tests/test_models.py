@@ -1,7 +1,7 @@
 import pytest
 from pydantic import ValidationError
 
-from src.models import (
+from antlion.models import (
     BATCH_SIZE,
     DEFAULT_MODEL,
     DEFAULT_PASSWORDS,

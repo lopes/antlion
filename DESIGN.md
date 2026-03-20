@@ -14,7 +14,7 @@ CLI validation → Context ingestion → Campaign planning (batched, Pydantic-en
 ## CLI Interface
 
 ```
-uv run python src/antlion.py \
+uv run python -m antlion \
   --base-dir /tmp \
   --operation op_alpha \
   --num-files 99 \
@@ -123,7 +123,7 @@ Written to `<base-dir>/<operation>/MANIFEST.json`. Always generated on every run
       "summary": "VPN gateway configuration for the Luxembourg office"
     },
     {
-      "path": "infra/policies/access_control.epdf",
+      "path": "infra/policies/access_control.pdf",
       "format": "epdf",
       "summary": "Physical and logical access control policy. Password: abc123"
     }
@@ -178,6 +178,7 @@ Deduplication is applied during plan post-processing, before any files are writt
 - The user can override this list via `--passwords foobar,Checkbox1`.
 - During planning, passwords are assigned to EPDF files by cycling through the password list.
 - Passwords are recorded in the manifest's summary field for each EPDF entry.
+- Encrypted PDFs use the standard `.pdf` extension on disk (not `.epdf`). The `format` field in the manifest distinguishes them. Any `.epdf` extensions from the LLM are normalized to `.pdf` during post-processing.
 
 
 ## Format-Specific Generation Notes
@@ -199,22 +200,26 @@ Deduplication is applied during plan post-processing, before any files are writt
 
 ```
 antlion/
-├── src/
-│   ├── antlion.py          # Entrypoint
+├── src/antlion/
+│   ├── __init__.py         # Package exports
+│   ├── __main__.py         # Entrypoint (python -m antlion)
 │   ├── cli.py              # CLI argument parsing and validation
 │   ├── planner.py          # Campaign planning (LLM structured output)
 │   ├── generator.py        # Content generation orchestration
 │   ├── manifest.py         # Manifest read/write
 │   ├── models.py           # Pydantic models (CampaignPlan, FileEntry, etc.)
-│   ├── write_pdf.py        # PDF writer
-│   ├── write_epdf.py       # Encrypted PDF writer
-│   ├── write_docx.py       # DOCX writer
-│   ├── write_xlsx.py       # XLSX writer
-│   ├── write_pptx.py       # PPTX writer
-│   ├── write_md.py         # Markdown writer
-│   ├── write_conf.py       # CONF writer
-│   ├── write_json.py       # JSON writer
-│   └── write_xml.py        # XML writer
+│   ├── resume.py           # Resume action logic
+│   └── writers/
+│       ├── __init__.py     # Writer dispatch (get_writer)
+│       ├── pdf.py          # PDF writer
+│       ├── epdf.py         # Encrypted PDF writer
+│       ├── docx.py         # DOCX writer
+│       ├── xlsx.py         # XLSX writer
+│       ├── pptx.py         # PPTX writer
+│       ├── md.py           # Markdown writer
+│       ├── conf.py         # CONF writer
+│       ├── json.py         # JSON writer
+│       └── xml.py          # XML writer
 ├── tests/
 │   └── ...                 # Tests organized by behavior
 ├── CLAUDE.md
