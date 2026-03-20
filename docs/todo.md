@@ -96,6 +96,6 @@
 - [x] 9.6 API error → exit 3
 
 ### Phase 10: Integration
-- [ ] 10.1 End-to-end with mocked LLM (5 files, 3 formats)
-- [ ] 10.2 Resume integration test
-- [ ] 10.3 Dry-run integration test
+- [x] 10.1 End-to-end with mocked LLM (5 files, 3 formats)
+- [x] 10.2 Resume integration test
+- [x] 10.3 Dry-run integration test
