@@ -14,8 +14,7 @@ By strategically placing these files in your environment, you align with the **M
 
 
 ## How it Works
-
-Creating convincing decoy files manually is tedious and repetitive. Antlion leverages an AI Agent (powered by Anthropic's Claude) to handle this dynamically:
+Creating convincing decoy files manually is tedious and repetitive. Antlion leverages Anthropic's Claude to handle this dynamically:
 
 1. **Context Ingestion:** The agent reads operator-defined parameters: base directory, operation name, target file count, file formats, and the specific narrative context (e.g., mimicked teams, corporate environment, tech stack).
 2. **Campaign Planning (Structured Data):** The LLM generates a structured roadmap of the decoys, defining realistic file paths, names, types, and summaries. This step forces a structured JSON output enforced via Pydantic, guaranteeing the LLM's response maps perfectly to internal data objects. For encrypted files, passwords are assigned and stored in the manifest.
@@ -26,12 +25,10 @@ Operators can easily review the generated directory and manually inject specific
 
 
 ## Supported File Formats
-
 `PDF`, `Encrypted PDF`, `DOCX`, `XLSX`, `PPTX`, `Markdown`, `CONF`, `JSON`, `XML`
 
 
 ## Tech Stack
-
 - **LLM Provider:** `anthropic` (Claude Sonnet 4)
 - **Data Validation:** `pydantic` (structured output enforcement during planning)
 - **Office Formats:** `python-docx`, `openpyxl`, `python-pptx`
@@ -40,7 +37,6 @@ Operators can easily review the generated directory and manually inject specific
 
 
 ## Installation
-
 Requires [uv](https://github.com/astral-sh/uv) and Python 3.14+.
 
 ```sh
@@ -56,7 +52,6 @@ export ANTHROPIC_API_KEY="sk-ant-your-api-key-here"
 
 
 ## Usage
-
 ```sh
 uv run python -m antlion \
   --base-dir /tmp \
@@ -71,7 +66,6 @@ uv run python -m antlion \
 This generates a structured directory at `/tmp/op_alpha` containing subfolders and 99 context-aware files mimicking a mid-sized Luxembourg fintech.
 
 ### Parameters
-
 | Parameter        | Required | Description                                         | Default                    |
 |------------------|----------|-----------------------------------------------------|----------------------------|
 | `--base-dir`     | Yes      | Existing, writable directory for output              | —                          |
@@ -87,7 +81,6 @@ This generates a structured directory at `/tmp/op_alpha` containing subfolders a
 | `--dry-run`      | No       | Show plan without writing files                       | `false`                    |
 
 ### Dry Run
-
 Preview the campaign plan without creating any files:
 
 ```sh
@@ -103,7 +96,6 @@ uv run python -m antlion \
 ```
 
 ### Resume
-
 If generation is interrupted, resume where you left off:
 
 ```sh
@@ -119,7 +111,6 @@ uv run python -m antlion \
 ```
 
 ### Exit Codes
-
 | Code | Meaning                                    |
 |------|--------------------------------------------|
 | 0    | Success                                    |
@@ -131,7 +122,6 @@ uv run python -m antlion \
 
 
 ## Development
-
 ```sh
 uv run pytest              # Run all tests
 uv run pytest -k "test_x"  # Run specific test
@@ -141,11 +131,9 @@ See [DESIGN.md](DESIGN.md) for the full technical specification and [CLAUDE.md](
 
 
 ## Known Limitations
-
 - **Context Window Constraints:** For large operations (100+ files), Antlion batches the campaign planning phase in groups of 50 to maintain output quality.
 - **Sequential Generation:** Files are generated one at a time (no concurrency in v1).
 
 
 ## License
-
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
