@@ -44,16 +44,16 @@
 - [x] 2.9 `--base-dir` existing writable directory
 
 ### Phase 3: File Writers
-- [ ] 3.1–3.2 `write_md` + nested dir creation
-- [ ] 3.3 `write_json`
-- [ ] 3.4 `write_xml`
-- [ ] 3.5 `write_conf`
-- [ ] 3.6 `write_pdf` (reportlab)
-- [ ] 3.7 `write_epdf` (reportlab + pypdf)
-- [ ] 3.8 `write_docx` (python-docx)
-- [ ] 3.9 `write_xlsx` (openpyxl)
-- [ ] 3.10 `write_pptx` (python-pptx)
-- [ ] 3.11 `get_writer` dispatch function
+- [x] 3.1–3.2 `write_md` + nested dir creation
+- [x] 3.3 `write_json`
+- [x] 3.4 `write_xml`
+- [x] 3.5 `write_conf`
+- [x] 3.6 `write_pdf` (reportlab)
+- [x] 3.7 `write_epdf` (reportlab + pypdf)
+- [x] 3.8 `write_docx` (python-docx)
+- [x] 3.9 `write_xlsx` (openpyxl)
+- [x] 3.10 `write_pptx` (python-pptx)
+- [x] 3.11 `get_writer` dispatch function
 
 ### Phase 4: Manifest
 - [ ] 4.1 `write_manifest` creates `MANIFEST.json`
