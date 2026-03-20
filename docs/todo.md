@@ -23,14 +23,14 @@
 - [ ] 0.4 Move `main.py` → `src/antlion.py`, confirm `uv run pytest` runs
 
 ### Phase 1: Pydantic Models
-- [ ] 1.1 `SUPPORTED_FORMATS` frozenset
-- [ ] 1.2 `MAX_FILES`, `BATCH_SIZE` constants
-- [ ] 1.3 `DEFAULT_MODEL`, `DEFAULT_PASSWORDS` constants
-- [ ] 1.4 Exit code constants (0–5)
-- [ ] 1.5 `FileEntry` frozen model with format validator
-- [ ] 1.6 `CampaignPlan` frozen model
-- [ ] 1.7 `OperationParameters` frozen model
-- [ ] 1.8 `Manifest` frozen model with JSON round-trip
+- [x] 1.1 `SUPPORTED_FORMATS` frozenset
+- [x] 1.2 `MAX_FILES`, `BATCH_SIZE` constants
+- [x] 1.3 `DEFAULT_MODEL`, `DEFAULT_PASSWORDS` constants
+- [x] 1.4 Exit code constants (0–5)
+- [x] 1.5 `FileEntry` frozen model with format validator
+- [x] 1.6 `CampaignPlan` frozen model
+- [x] 1.7 `OperationParameters` frozen model
+- [x] 1.8 `Manifest` frozen model with JSON round-trip
 
 ### Phase 2: CLI Parsing
 - [ ] 2.1 Happy path — all required args, defaults applied
