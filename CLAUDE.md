@@ -74,7 +74,8 @@ Follow RED-GREEN-REFACTOR in small, known-good increments:
 2. **GREEN:** Write the minimum code to make the test pass
 3. **REFACTOR:** Assess improvement opportunities (only if it adds value)
 4. Each increment must leave the codebase in a working state
-5. **Wait for commit approval** before every commit
+5. **After completing each phase:** run the full test suite (`uv run pytest`), report results, and **wait for explicit approval** before proceeding to the next phase
+6. **Wait for commit approval** before every commit
 
 ## Python Code Style
 
@@ -84,6 +85,7 @@ Follow RED-GREEN-REFACTOR in small, known-good increments:
 - **Prefer comprehensions and functional patterns** (`map`, `filter`, `functools.reduce`) over imperative loops
 - **Options objects over positional parameters** — use dataclasses or typed dicts for functions with multiple parameters
 - **No `Any` types** — use `object` or `Unknown` patterns if type is truly unknown; leverage type hints strictly
+- **Strict type checking** — Pylance is set to strict mode; all code must pass without type errors. Annotate all function parameters, return types, and variables where inference is insufficient. Use protocol types or explicit casts for third-party libraries with incomplete stubs.
 - **Use uv** for dependency management
 
 ## Testing Principles
