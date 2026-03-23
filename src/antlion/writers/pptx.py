@@ -1,6 +1,8 @@
 from pathlib import Path
+from typing import cast
 
 from pptx import Presentation
+from pptx.text.text import TextFrame
 
 
 def write_pptx(content: str, path: Path) -> None:
@@ -17,7 +19,7 @@ def write_pptx(content: str, path: Path) -> None:
         if title_shape is not None:
             title_shape.text = lines[0]
         body = slide.placeholders[1]
-        tf = body.text_frame
+        tf = cast(TextFrame, getattr(body, "text_frame"))
         tf.clear()
         for i, line in enumerate(lines[1:]):
             if i == 0:

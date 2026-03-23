@@ -1,6 +1,8 @@
 from pathlib import Path
 from unittest.mock import MagicMock
 
+import pytest
+
 from antlion.generator import generate_all, generate_file_content, write_generated_file
 from antlion.models import FileEntry, Manifest, OperationParameters
 
@@ -130,7 +132,7 @@ def test_generate_all_resume_skips_existing(tmp_path: Path):
     assert client.messages.create.call_count == 2
 
 
-def test_generate_all_progress_output(tmp_path: Path, capsys):  # type: ignore[no-untyped-def]
+def test_generate_all_progress_output(tmp_path: Path, capsys: pytest.CaptureFixture[str]):
     files = [_entry("a.md"), _entry("b.md")]
     manifest = _make_manifest(files)
     client = MagicMock()

@@ -21,29 +21,47 @@ def test_bad_cli_args_returns_exit_code_1():
     assert result == EXIT_CLI_ERROR
 
 
-def test_missing_api_key_returns_exit_code_2(tmp_path, monkeypatch):
+def test_missing_api_key_returns_exit_code_2(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+):
     monkeypatch.delenv("ANTHROPIC_API_KEY", raising=False)
-    result = run([
-        "--base-dir", str(tmp_path),
-        "--operation", "op1",
-        "--num-files", "1",
-        "--formats", "md",
-        "--teams", "it",
-        "--company", "Acme",
-        "--file-content", "docs",
-    ])
+    result = run(
+        [
+            "--base-dir",
+            str(tmp_path),
+            "--operation",
+            "op1",
+            "--num-files",
+            "1",
+            "--formats",
+            "md",
+            "--teams",
+            "it",
+            "--company",
+            "Acme",
+            "--file-content",
+            "docs",
+        ]
+    )
     assert result == EXIT_ENV_ERROR
 
 
 def _valid_argv(tmp_path: Path) -> list[str]:
     return [
-        "--base-dir", str(tmp_path),
-        "--operation", "op_test",
-        "--num-files", "2",
-        "--formats", "md,conf",
-        "--teams", "it",
-        "--company", "Acme",
-        "--file-content", "docs",
+        "--base-dir",
+        str(tmp_path),
+        "--operation",
+        "op_test",
+        "--num-files",
+        "2",
+        "--formats",
+        "md,conf",
+        "--teams",
+        "it",
+        "--company",
+        "Acme",
+        "--file-content",
+        "docs",
     ]
 
 
@@ -92,7 +110,9 @@ def test_successful_run_returns_exit_0(tmp_path: Path, monkeypatch: pytest.Monke
     assert (op_dir / "it" / "app.conf").exists()
 
 
-def test_partial_completion_returns_exit_4(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
+def test_partial_completion_returns_exit_4(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+):
     monkeypatch.setenv("ANTHROPIC_API_KEY", "test-key")
 
     plan_files = [
@@ -128,7 +148,9 @@ def test_planning_error_returns_exit_5(tmp_path: Path, monkeypatch: pytest.Monke
     assert result == EXIT_PLANNING_ERROR
 
 
-def test_api_error_during_planning_returns_exit_3(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
+def test_api_error_during_planning_returns_exit_3(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+):
     monkeypatch.setenv("ANTHROPIC_API_KEY", "test-key")
 
     mock_client = MagicMock()

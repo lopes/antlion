@@ -93,8 +93,8 @@ def test_campaign_plan_accepts_empty_files():
     assert plan.files == []
 
 
-def _make_operation_parameters(**overrides: object) -> OperationParameters:
-    defaults = {
+def _make_operation_parameters(**overrides: str | int | list[str]) -> OperationParameters:
+    defaults: dict[str, str | int | list[str]] = {
         "base_dir": "/tmp",
         "num_files": 10,
         "formats": ["pdf", "docx"],
@@ -104,7 +104,7 @@ def _make_operation_parameters(**overrides: object) -> OperationParameters:
         "model": "claude-sonnet-4-20250514",
         "passwords": ["abc123", "root"],
     }
-    return OperationParameters(**(defaults | overrides))
+    return OperationParameters(**dict(defaults | overrides))  # type: ignore[arg-type]
 
 
 def test_operation_parameters_construction():
@@ -125,8 +125,8 @@ def test_operation_parameters_is_frozen():
         params.base_dir = "/other"
 
 
-def _make_manifest(**overrides: object) -> Manifest:
-    defaults = {
+def _make_manifest(**overrides: str | OperationParameters | list[FileEntry]) -> Manifest:
+    defaults: dict[str, str | OperationParameters | list[FileEntry]] = {
         "operation": "op_alpha",
         "parameters": _make_operation_parameters(),
         "files": [
@@ -134,7 +134,7 @@ def _make_manifest(**overrides: object) -> Manifest:
             FileEntry(path="infra/config.conf", format="conf", summary="Config"),
         ],
     }
-    return Manifest(**(defaults | overrides))
+    return Manifest(**dict(defaults | overrides))  # type: ignore[arg-type]
 
 
 def test_manifest_construction():

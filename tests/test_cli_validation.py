@@ -1,3 +1,5 @@
+from pathlib import Path
+
 from antlion.cli import CliArgs, CliError, parse_args
 from antlion.models import DEFAULT_MODEL, DEFAULT_PASSWORDS, MAX_FILES, SUPPORTED_FORMATS
 
@@ -166,7 +168,7 @@ def test_dry_run_flag():
     assert result.dry_run is True
 
 
-def test_base_dir_must_exist(tmp_path):
+def test_base_dir_must_exist(tmp_path: Path):
     result = parse_args(_valid_argv(**{"--base-dir": str(tmp_path)}))
     assert isinstance(result, CliArgs)
 
@@ -177,7 +179,7 @@ def test_base_dir_nonexistent_returns_error():
     assert "base-dir" in result.message.lower()
 
 
-def test_base_dir_file_not_directory_returns_error(tmp_path):
+def test_base_dir_file_not_directory_returns_error(tmp_path: Path):
     file_path = tmp_path / "afile.txt"
     file_path.write_text("hello")
     result = parse_args(_valid_argv(**{"--base-dir": str(file_path)}))

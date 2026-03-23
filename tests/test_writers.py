@@ -91,6 +91,7 @@ def test_write_xlsx_creates_valid_spreadsheet(tmp_path: Path):
     assert target.exists()
     wb = load_workbook(target)
     ws = wb.active
+    assert ws is not None
     assert ws.cell(row=1, column=1).value == "Name"
     assert ws.cell(row=1, column=2).value == "Age"
     assert ws.cell(row=2, column=1).value == "Alice"

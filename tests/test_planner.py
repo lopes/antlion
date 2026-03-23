@@ -4,7 +4,7 @@ import anthropic
 import pytest
 from anthropic.types import ToolUseBlock
 
-from antlion.models import CampaignPlan, FileEntry, OperationParameters
+from antlion.models import CampaignPlan, OperationParameters
 from antlion.planner import (
     PlanningError,
     build_planning_prompt,
@@ -103,8 +103,8 @@ def test_plan_batch_invalid_response_raises_planning_error():
     assert not exc_info.value.is_api_error
 
 
-def _make_params(**overrides: object) -> OperationParameters:
-    defaults = {
+def _make_params(**overrides: str | int | list[str]) -> OperationParameters:
+    defaults: dict[str, str | int | list[str]] = {
         "base_dir": "/tmp",
         "num_files": 75,
         "formats": ["pdf", "md"],
@@ -114,7 +114,7 @@ def _make_params(**overrides: object) -> OperationParameters:
         "model": "test-model",
         "passwords": ["p1", "p2"],
     }
-    return OperationParameters(**(defaults | overrides))
+    return OperationParameters(**dict(defaults | overrides))  # type: ignore[arg-type]
 
 
 def test_plan_campaign_merges_batches():
