@@ -5,7 +5,7 @@ from unittest.mock import MagicMock, patch
 import pytest
 from anthropic.types import TextBlock, ToolUseBlock
 
-from antlion import run
+from antlion.__main__ import run
 from antlion.models import EXIT_SUCCESS, Manifest
 
 
