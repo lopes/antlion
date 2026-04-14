@@ -50,6 +50,9 @@ def parse_args(argv: list[str]) -> CliArgs | CliError:
     if not os.path.isdir(args.base_dir):
         return CliError(message=f"base-dir is not an existing directory: '{args.base_dir}'")
 
+    if not os.access(args.base_dir, os.W_OK):
+        return CliError(message=f"base-dir is not writable: '{args.base_dir}'")
+
     if not OPERATION_PATTERN.match(args.operation):
         return CliError(message=f"Invalid operation name: '{args.operation}'")
 
@@ -62,6 +65,9 @@ def parse_args(argv: list[str]) -> CliArgs | CliError:
         return CliError(message=f"Unsupported formats: {', '.join(invalid_formats or ['(empty)'])}")
 
     teams = args.teams.split(",")
+    empty_teams = [t for t in teams if t == ""]
+    if empty_teams:
+        return CliError(message="Team names must not be empty")
     long_teams = [t for t in teams if len(t) > 64]
     if long_teams:
         return CliError(message=f"Team names exceed 64 chars: {', '.join(long_teams)}")

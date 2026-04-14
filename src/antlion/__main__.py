@@ -39,11 +39,15 @@ def _build_operation_parameters(cli: CliArgs) -> OperationParameters:
     )
 
 
-def _print_dry_run(manifest: Manifest, operation_dir: Path) -> None:
+def _print_dry_run(manifest: Manifest, operation_dir: Path, is_resume: bool) -> None:
+    files = [
+        entry for entry in manifest.files
+        if not (is_resume and (operation_dir / entry.path).exists())
+    ]
     print(f"[DRY RUN] Operation: {manifest.operation}")
     print(f"[DRY RUN] Would create directory: {operation_dir}")
-    print(f"[DRY RUN] Files ({len(manifest.files)}):")
-    for entry in manifest.files:
+    print(f"[DRY RUN] Files ({len(files)}):")
+    for entry in files:
         print(f"  {entry.path} ({entry.format}) — {entry.summary}")
 
 
@@ -76,11 +80,17 @@ def run(argv: list[str]) -> int:
 
     if action == ResumeAction.RESUME:
         manifest = read_manifest(operation_dir)
+        if manifest is None:
+            print(f"Error: manifest for operation '{cli.operation}' could not be read", file=sys.stderr)
+            return EXIT_CLI_ERROR
         is_resume = True
         print(f"Resuming operation '{cli.operation}'")
     elif action == ResumeAction.PROMPT:
         if _prompt_user_resume():
             manifest = read_manifest(operation_dir)
+            if manifest is None:
+                print(f"Error: manifest for operation '{cli.operation}' could not be read", file=sys.stderr)
+                return EXIT_CLI_ERROR
             is_resume = True
         else:
             shutil.rmtree(operation_dir)
@@ -102,12 +112,11 @@ def run(argv: list[str]) -> int:
         )
 
     if cli.dry_run:
-        _print_dry_run(manifest, operation_dir)
+        _print_dry_run(manifest, operation_dir, is_resume)
         return EXIT_SUCCESS
 
-    if not is_resume:
-        operation_dir.mkdir(parents=True, exist_ok=True)
-        write_manifest(manifest, operation_dir)
+    operation_dir.mkdir(parents=True, exist_ok=True)
+    write_manifest(manifest, operation_dir)
 
     try:
         failures = generate_all(client, manifest, operation_dir, resume=is_resume)

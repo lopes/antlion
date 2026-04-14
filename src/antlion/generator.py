@@ -64,12 +64,14 @@ def generate_all(
     operation_dir: Path,
     resume: bool = False,
 ) -> int:
-    total = len(manifest.files)
+    to_generate = [
+        entry for entry in manifest.files
+        if not (resume and (operation_dir / entry.path).exists())
+    ]
+    total = len(to_generate)
     failures = 0
-    for idx, entry in enumerate(manifest.files, start=1):
+    for idx, entry in enumerate(to_generate, start=1):
         file_path = operation_dir / entry.path
-        if resume and file_path.exists():
-            continue
         print(f"Generating file {idx}/{total}: {file_path}")
         try:
             content = generate_file_content(

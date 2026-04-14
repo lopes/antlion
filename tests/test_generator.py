@@ -144,3 +144,22 @@ def test_generate_all_progress_output(tmp_path: Path, capsys: pytest.CaptureFixt
     captured = capsys.readouterr()
     assert "Generating file 1/2:" in captured.out
     assert "Generating file 2/2:" in captured.out
+
+
+def test_generate_all_resume_progress_skips_existing_files(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+):
+    files = [_entry("a.md"), _entry("b.md"), _entry("c.md")]
+    manifest = _make_manifest(files)
+    (tmp_path / "a.md").write_text("existing")
+    client = MagicMock()
+    client.messages.create.side_effect = [
+        _make_text_response("B"),
+        _make_text_response("C"),
+    ]
+    generate_all(client, manifest, tmp_path, resume=True)
+    captured = capsys.readouterr()
+    progress_lines = [l for l in captured.out.splitlines() if "Generating file" in l]
+    assert len(progress_lines) == 2
+    assert "1/2:" in progress_lines[0]
+    assert "2/2:" in progress_lines[1]

@@ -184,3 +184,25 @@ def test_base_dir_file_not_directory_returns_error(tmp_path: Path):
     file_path.write_text("hello")
     result = parse_args(_valid_argv(**{"--base-dir": str(file_path)}))
     assert isinstance(result, CliError)
+
+
+def test_base_dir_not_writable_returns_error(tmp_path: Path):
+    read_only = tmp_path / "ro"
+    read_only.mkdir()
+    read_only.chmod(0o444)
+    try:
+        result = parse_args(_valid_argv(**{"--base-dir": str(read_only)}))
+        assert isinstance(result, CliError)
+        assert "base-dir" in result.message.lower()
+    finally:
+        read_only.chmod(0o755)
+
+
+def test_empty_team_name_returns_error():
+    result = parse_args(_valid_argv(**{"--teams": ""}))
+    assert isinstance(result, CliError)
+
+
+def test_team_name_with_empty_entry_returns_error():
+    result = parse_args(_valid_argv(**{"--teams": "it,,infra"}))
+    assert isinstance(result, CliError)

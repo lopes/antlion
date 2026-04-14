@@ -1,5 +1,7 @@
 from pathlib import Path
 
+from pydantic import ValidationError
+
 from antlion.models import Manifest
 
 MANIFEST_FILENAME = "MANIFEST.json"
@@ -15,7 +17,10 @@ def read_manifest(operation_dir: Path) -> Manifest | None:
     manifest_path = operation_dir / MANIFEST_FILENAME
     if not manifest_path.exists():
         return None
-    return Manifest.model_validate_json(manifest_path.read_text())
+    try:
+        return Manifest.model_validate_json(manifest_path.read_text())
+    except (ValidationError, ValueError):
+        return None
 
 
 def manifest_exists(operation_dir: Path) -> bool:

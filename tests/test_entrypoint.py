@@ -164,3 +164,95 @@ def test_api_error_during_planning_returns_exit_3(
         result = run(_valid_argv(tmp_path))
 
     assert result == EXIT_API_ERROR
+
+
+# G1 — manifest always written, even on resume
+def test_manifest_rewritten_on_resume(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
+    monkeypatch.setenv("ANTHROPIC_API_KEY", "test-key")
+
+    plan_files = [
+        {"path": "it/notes.md", "format": "md", "summary": "Notes"},
+    ]
+
+    mock_client = MagicMock()
+    mock_client.messages.create.side_effect = [
+        _make_plan_response(plan_files),
+        _make_content_response("# Notes"),
+        _make_content_response("# Notes again"),
+    ]
+
+    with patch("antlion.__main__.anthropic.Anthropic", return_value=mock_client):
+        run(_valid_argv(tmp_path))
+
+    op_dir = tmp_path / "op_test"
+    manifest_path = op_dir / "MANIFEST.json"
+    assert manifest_path.exists()
+    mtime_before = manifest_path.stat().st_mtime
+
+    # Pre-create the generated file so resume skips generation
+    (op_dir / "it" / "notes.md").write_text("pre-existing")
+
+    resume_argv = _valid_argv(tmp_path) + ["--resume"]
+    with patch("antlion.__main__.anthropic.Anthropic", return_value=mock_client):
+        result = run(resume_argv)
+
+    assert result == EXIT_SUCCESS
+    assert manifest_path.exists()
+    mtime_after = manifest_path.stat().st_mtime
+    assert mtime_after > mtime_before
+
+
+# G2 — dry-run + resume shows only remaining files
+def test_dry_run_resume_shows_only_remaining_files(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+):
+    monkeypatch.setenv("ANTHROPIC_API_KEY", "test-key")
+
+    plan_files = [
+        {"path": "it/notes.md", "format": "md", "summary": "Notes"},
+        {"path": "it/app.conf", "format": "conf", "summary": "Config"},
+    ]
+
+    mock_client = MagicMock()
+    mock_client.messages.create.side_effect = [
+        _make_plan_response(plan_files),
+        _make_content_response("# Notes"),
+        _make_content_response("[main]"),
+    ]
+
+    with patch("antlion.__main__.anthropic.Anthropic", return_value=mock_client):
+        run(_valid_argv(tmp_path))
+
+    op_dir = tmp_path / "op_test"
+    # notes.md now exists; app.conf does not
+    assert (op_dir / "it" / "notes.md").exists()
+    (op_dir / "it" / "app.conf").unlink()
+
+    capsys.readouterr()  # clear previous output
+
+    resume_dry_argv = _valid_argv(tmp_path) + ["--resume", "--dry-run"]
+    with patch("antlion.__main__.anthropic.Anthropic", return_value=mock_client):
+        result = run(resume_dry_argv)
+
+    assert result == EXIT_SUCCESS
+    captured = capsys.readouterr()
+    assert "app.conf" in captured.out
+    assert "notes.md" not in captured.out
+
+
+# G5 — read_manifest returning None on resume path surfaces an error
+def test_resume_with_unreadable_manifest_errors(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+):
+    monkeypatch.setenv("ANTHROPIC_API_KEY", "test-key")
+
+    op_dir = tmp_path / "op_test"
+    op_dir.mkdir()
+    manifest_path = op_dir / "MANIFEST.json"
+    manifest_path.write_text("{invalid json}")
+
+    resume_argv = _valid_argv(tmp_path) + ["--resume"]
+    with patch("antlion.__main__.anthropic.Anthropic", return_value=MagicMock()):
+        result = run(resume_argv)
+
+    assert result != EXIT_SUCCESS
